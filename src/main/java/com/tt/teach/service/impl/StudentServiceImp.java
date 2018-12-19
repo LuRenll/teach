@@ -6,6 +6,7 @@ import com.tt.teach.service.StudentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @作者：Shilinzhi
@@ -21,5 +22,10 @@ public class StudentServiceImp implements StudentService{
     @Override
     public Student doLogin(Student student) {
         return studentDao.doLogin(student);
+    }
+
+    @Override
+    public List<Student> getStudentList() {
+        return studentDao.getStudentList();
     }
 }
