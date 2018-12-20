@@ -26,53 +26,53 @@
     <![endif]-->
 </head>
 <body>
-    <!--1.前端提供的table，一会将使用bootstrap框架进行ajax异步请求，将数据渲染到table中-->
-    <table id="table_stu" data-toggle="table" data-height="400">
-    </table>
-    <!--2.前端提供的弹出框，负责编辑信息的显示-->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        编辑
-                    </h4>
-                </div>
-                <div class="modal-body">
-                    <form name="placeOrder" method="POST" action="/stu/updateStu">
-                        <input type="hidden" value="" id="bhId">
-                        <div class="form-group">
-                            <label for="stuNo">学号</label>
-                            <input type="text" class="form-control" id="stuNo" name="stuNo" placeholder="学号" required readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="stuName">姓名</label>
-                            <input type="text" class="form-control" id="stuName" name="stuName" placeholder="姓名" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="stuPwd">密码</label>
-                            <input type="text" class="form-control" id="stuPwd" name="stuPwd" placeholder="密码" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="stuPhone">电话</label>
-                            <input type="text" class="form-control" id="stuPhone" name="stuPhone" placeholder="电话" required>
-                        </div>
+<!--1.前端提供的table，一会将使用bootstrap框架进行ajax异步请求，将数据渲染到table中-->
+<table id="table_stu" data-toggle="table" data-height="400">
+</table>
+<!--2.前端提供的弹出框，负责编辑信息的显示-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    编辑
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form name="placeOrder" method="POST" action="/stu/updateStudent">
+                    <input type="hidden" value="" id="bhId">
+                    <div class="form-group">
+                        <label for="stuNo">学号</label>
+                        <input type="text" class="form-control" id="stuNo" name="stuNo" placeholder="学号" required
+                               readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="stuName">姓名</label>
+                        <input type="text" class="form-control" id="stuName" name="stuName" placeholder="姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stuPwd">密码</label>
+                        <input type="text" class="form-control" id="stuPwd" name="stuPwd" placeholder="密码" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stuPhone">电话</label>
+                        <input type="text" class="form-control" id="stuPhone" name="stuPhone" placeholder="电话" required>
+                    </div>
 
-                        <button type="submit" class="btn btn-primary" >提交</button>
-                    </form>
+                    <button type="submit" class="btn btn-primary">提交</button>
+                </form>
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
-                    </button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
             </div>
         </div>
     </div>
-
+</div>
 
 
 </body>
@@ -91,82 +91,93 @@
 <script>
     //3.前端提供的绑定事件myselfEvents
     window.myselfEvents = {
-        "click .edit":function(e,value,row,index){
+        "click .edit": function (e, value, row, index) {
             $("#myModal").modal("show");
             $("#stuNo").val(row.studentNo);
             $("#stuName").val(row.studentName);
             $("#stuPwd").val(row.loginPwd);
             $("#stuPhone").val(row.phone);
         },
-        "click .delete":function(e,value,row,index) {
-           
+        "click .delete": function (e, value, row, index) {
+            var stuNo = row.studentNo;
+            var isOk = confirm("确定要删除吗？");
+            if (isOk){
+                $.ajax({
+                    url:"/stu/deleteStudent/"+stuNo,
+                    type:"DELETE",
+                    success:function () {
+                        alert(data.msg);
+                        window.location.reload();
+                    }
+                })
+            }
 
         }
     }
 
     function findStuFn() {
         $("#table_stu").bootstrapTable({
-            url:"/stu/getStudentList",  //请求的URL地址
-            type:"GET",                  //请求类型
-            dataType:"json",            //期望的返回数据类型
-            pagination:true,            //是否进行分页
-            search:true,                //搜索框
-            showRefresh:true,          //是否有刷新按钮
-            pageSize:5,                //初始化每页显示几条数据
-            pageList:[1,2,3,4,5],       //每页显示数据的选择
-            columns:[
+            url: "/stu/getStudentList",  //请求的URL地址
+            type: "GET",                  //请求类型
+            dataType: "json",            //期望的返回数据类型
+            pagination: true,            //是否进行分页
+            search: true,                //搜索框
+            showRefresh: true,          //是否有刷新按钮
+            pageSize: 5,                //初始化每页显示几条数据
+            pageList: [1, 2, 3, 4, 5],       //每页显示数据的选择
+            columns: [
                 {
-                    field:"studentNo",
-                    title:"学号",
-                    align:"center",
-                    valign:"middle",
-                    searchable:true
+                    field: "studentNo",
+                    title: "学号",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
                 },
                 {
-                    field:"studentName",
-                    title:"姓名",
-                    align:"center",
-                    valign:"middle",
-                    searchable:true
+                    field: "studentName",
+                    title: "姓名",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
                 },
                 {
-                    field:"loginPwd",
-                    title:"密码",
-                    align:"center",
-                    valign:"middle",
-                    searchable:true
-                },{
-                    field:"sex",
-                    title:"性别",
-                    align:"center",
-                    valign:"middle",
-                    searchable:true
+                    field: "loginPwd",
+                    title: "密码",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                }, {
+                    field: "sex",
+                    title: "性别",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
                 }
-                ,{
-                    field:"gradeName",
-                    title:"年级",
-                    align:"center",
-                    valign:"middle",
-                    searchable:true
-                },{
-                    field:"phone",
-                    title:"电话",
-                    align:"center",
-                    valign:"middle",
-                    searchable:true
-                },{
-                    field:"bornDate",
-                    title:"出生日期",
-                    align:"center",
-                    valign:"middle",
-                    searchable:true
-                },{
-                    field:"#",
-                    title:"操作",
-                    align:"center",
-                    valign:"middle",
-                    formatter:delEdit,
-                    events:myselfEvents
+                , {
+                    field: "gradeName",
+                    title: "年级",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                }, {
+                    field: "phone",
+                    title: "电话",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                }, {
+                    field: "bornDate",
+                    title: "出生日期",
+                    align: "center",
+                    valign: "middle",
+                    searchable: true
+                }, {
+                    field: "#",
+                    title: "操作",
+                    align: "center",
+                    valign: "middle",
+                    formatter: delEdit,
+                    events: myselfEvents
                 }
             ]
 
@@ -174,13 +185,13 @@
     }
 
     findStuFn();
-       
-            //4.前端提供编辑按钮两个，需要加如自己的绑定事件myselfEvents
-            function delEdit(value,row,index){
-                return [
-                    "<a class='btn btn-primary btn-sm edit' data-target='#myModal'>编辑</a> " +
-                    "<a class='btn btn-primary btn-sm delete'>删除</a>"].join('');
-        }
+
+    //4.前端提供编辑按钮两个，需要加如自己的绑定事件myselfEvents
+    function delEdit(value, row, index) {
+        return [
+            "<a class='btn btn-primary btn-sm edit' data-target='#myModal'>编辑</a> " +
+            "<a class='btn btn-primary btn-sm delete'>删除</a>"].join('');
+    }
 
 </script>
 </html>
